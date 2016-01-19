@@ -19,7 +19,7 @@ Class Vk extends \Nius\Core\Controller
     }
 
     public function get($domain)
-    {    
+    {
         $this->info = $this->groupsGetById($domain);
         $items = $this->wallGet($domain);
         $atomXML = $this->generateAtom($this->info, $items);
@@ -93,6 +93,9 @@ Class Vk extends \Nius\Core\Controller
         $item->text = $this->convertLinks($item->text);
         $item->author = $this->userGet($item->from_id);
         $item->title = substr($item->text, 0, strpos($item->text, "<br>"));
+        if (strlen($item->title) > 75) {
+            $item->title = substr($item->title, 0, strpos($item->title, "."));
+        }
 
         if (property_exists($item,'attachments'))
         {
