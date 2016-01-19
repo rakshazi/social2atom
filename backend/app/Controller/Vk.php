@@ -76,13 +76,17 @@ Class Vk extends \Nius\Core\Controller
         ];
         $item->text = preg_replace($patterns, $replacements, $raw);
         $item->title = substr($item->text, 0, strpos($item->text, "<br>"));
-        foreach($item->attachments as $attachment)
+
+        if (property_exists($item,'attachments'))
         {
-            $handler = "handleAttachment".ucfirst($attachment->type);
-            if(method_exists($this,$handler))
+            foreach($item->attachments as $attachment)
             {
-                $item->text.= "<br><br>";
-                $item->text.= call_user_func(array($this,$handler),array($attachment));
+                $handler = "handleAttachment".ucfirst($attachment->type);
+                if (method_exists($this,$handler))
+                {
+                    $item->text.= "<br><br>";
+                    $item->text.= call_user_func(array($this,$handler),array($attachment));
+                }
             }
         }
 
