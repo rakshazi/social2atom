@@ -1,2 +1,3 @@
 backend/vendor
 composer.lock
+log

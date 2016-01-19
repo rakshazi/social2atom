@@ -4,10 +4,13 @@ namespace App\Controller;
 Class Vk extends \Nius\Core\Controller
 {
     protected $apiURL;
+    protected $info;
+    protected $curl;
 
     public function init()
     {
         $this->apiURL = 'https://api.vk.com/method/';
+        $this->curl = new \Curl\Curl();
     }
 
     public function index()
@@ -16,32 +19,29 @@ Class Vk extends \Nius\Core\Controller
     }
 
     public function get($domain)
-    {
+    {    
+        $this->info = $this->groupsGetById($domain);
         $items = $this->wallGet($domain);
-        $info = $this->groupsGetById($domain);
-        $atomXML = $this->generateAtom($info, $items);
+        $atomXML = $this->generateAtom($this->info, $items);
     }
 
     protected function call($url)
     {
-        $opts = array(
-            'http' => array(
-                'method'=>"GET",
-                'header'=>"Content-Type: text/html; charset=utf-8"
-            )
-        );
-        $context = stream_context_create($opts);
+        $this->curl->get($url);
 
-        return file_get_contents($url, false, $context);
+        if($this->curl->error) {
+            return $this->call($url);
+        }
+
+        return $this->curl->response;
     }
 
     protected function wallGet($domain)
     {
         $url = $this->apiURL.'wall.get?domain='.$domain.'&count='.$this->app->config('default.vk.count');
         $raw = $this->call($url);
-        $data = json_decode($raw);
         $items = array();
-        foreach($data->response as $item)
+        foreach($raw->response as $item)
         {
             if (is_object($item)) {
                 $items[$item->id] = $this->preprocessPost($item);
@@ -55,26 +55,43 @@ Class Vk extends \Nius\Core\Controller
     {
         $url = $this->apiURL.'groups.getById?group_id='.$domain.'&fields=description';
         $raw = $this->call($url);
-        $data = json_decode($raw);
-        $description = explode("<br>",$data->response[0]->description);
+        $description = explode("<br>",$raw->response[0]->description);
 
         return array(
-            'title' => $data->response[0]->name,
+            'title' => $raw->response[0]->name,
             'description' => $description[0],
             'url' => 'https://vk.com/'.$domain,
         );
     }
 
-    protected function preprocessPost($item)
+    protected function userGet($id)
     {
-        $raw = $item->text;
-        $patterns = ['/\[(club[0-9]+)\|(.+)\]/u','/#([A-Za-zА-Яа-я0-9_]+)/u','/((www|http:\/\/)[^ ]+)/u'];
+        if($id > 0)
+        {
+            $url = $this->apiURL.'users.get?user_ids='.$id;
+            $raw = $this->call($url);
+            return $raw->response[0]->first_name.' '.$raw->response[0]->last_name;
+        }else{
+            return $this->info['title'];
+        }
+    }
+
+    protected function convertLinks($text)
+    {
+        $patterns = ['/\[(club[0-9]+)\|(.+)\]/u','/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u','/((www|http:\/\/)[^ <]+)/u'];
         $replacements = [
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/feed?q=#\1&section=search" target="_blank">#\1</a>',
             '<a href="\1" target="_blank">\1</a>'
         ];
-        $item->text = preg_replace($patterns, $replacements, $raw);
+
+        return preg_replace($patterns, $replacements, $text);
+    }
+
+    protected function preprocessPost($item)
+    {
+        $item->text = $this->convertLinks($item->text);
+        $item->author = $this->userGet($item->from_id);
         $item->title = substr($item->text, 0, strpos($item->text, "<br>"));
 
         if (property_exists($item,'attachments'))
@@ -93,25 +110,29 @@ Class Vk extends \Nius\Core\Controller
         return $item;
     }
 
-    protected function handleAttachmentVideo($attachment)
+    protected function handleAttachmentVideo($attachments)
     {
         return "<b>Video available only on post source</b>";
     }
 
-    protected function handleAttachmentLink($attachment)
+    protected function handleAttachmentLink($attachments)
     {
-        $data = '<a href="'.$attachment[0]->link->url.'">';
-        $data.= $attachment[0]->link->title;
-        $data.= '</a>';
+        $data = '';
+        foreach($attachments as $attachment) {
+            $data.= '<a href="'.$attachment->link->url.'">';
+            $data.= $attachment->link->title;
+            $data.= '</a>';
+        }
 
         return $data;
     }
 
-    protected function handleAttachmentPhoto($attachment)
+    protected function handleAttachmentPhoto($attachments)
     {
-        $data = '<img src="'.$attachment[0]->photo->src_big.'"';
-        $data.= 'title="'.$attachment[0]->photo->text.'"';
-        $data.= ' style="max-width: 800px;display: block;margin-left: auto;margin-right: auto"/>';
+        $data = '';
+        foreach($attachments as $attachment) {
+            $data.= '<img src="'.$attachment->photo->src_big.'" title="'.$attachment->photo->text.'"/>';
+        }
 
         return $data;
     }

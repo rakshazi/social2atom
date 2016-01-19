@@ -14,7 +14,7 @@
         <updated><?php echo date("Y-m-d\TH:i:sP",$item->date); ?></updated>
         <link rel="alternate" type="text/html" href="<?php echo $url.'?w=wall'.$item->from_id.'_'.$item->id; ?>"/>
         <author>
-            <name><![CDATA[TODO]]></name>
+            <name><![CDATA[<?php echo $item->author; ?>]]></name>
         </author>
         <content type="html"><![CDATA[<?php echo $item->text; ?>]]></content>
     </entry>

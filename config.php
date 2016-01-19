@@ -1,3 +1,3 @@
 <?php return array(
-    'default.vk.count' => 10
+    'default.vk.count' => 100
 );
