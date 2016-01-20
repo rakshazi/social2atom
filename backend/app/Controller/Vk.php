@@ -82,7 +82,7 @@ Class Vk extends \Nius\Core\Controller
             '/\[(club[0-9]+)\|(.+)\]/u',
             '/\[(id[0-9]+)\|(.+)\]/u',
             '/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u',
-            '/((www|http:\/\/|https:\/\/)[^ <]+)/u'
+            '/((www|http:\/\/|https:\/\/)[^ <\)]+)/u'
         );
         $replacements = array(
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
