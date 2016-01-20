@@ -82,13 +82,15 @@ Class Vk extends \Nius\Core\Controller
             '/\[(club[0-9]+)\|(.+)\]/u',
             '/\[(id[0-9]+)\|(.+)\]/u',
             '/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u',
-            '/((www|http:\/\/|https:\/\/)[^ <\)]+)/u'
+            '/((?!")(www|http:\/\/)[^ <">\)]+)/u',
+            '/((https:\/\/)[^ <">\)]+)/u'
         );
         $replacements = array(
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/feed?q=#\1&section=search" target="_blank">#\1</a>',
-            '<a href="\1" target="_blank">\1</a>'
+            '<a href="\1" target="_blank">\1</a>',
+            '\1',
         );
 
         return preg_replace($patterns, $replacements, $text);
