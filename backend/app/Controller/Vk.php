@@ -78,23 +78,31 @@ Class Vk extends \Nius\Core\Controller
 
     protected function convertLinks($text)
     {
-        $patterns = ['/\[(club[0-9]+)\|(.+)\]/u','/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u','/((www|http:\/\/)[^ <]+)/u'];
-        $replacements = [
+        $patterns = array(
+            '/\[(club[0-9]+)\|(.+)\]/u',
+            '/\[(id[0-9]+)\|(.+)\]/u',
+            '/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u',
+            '/((www|http:\/\/|https:\/\/)[^ <]+)/u'
+        );
+        $replacements = array(
+            '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/feed?q=#\1&section=search" target="_blank">#\1</a>',
             '<a href="\1" target="_blank">\1</a>'
-        ];
+        );
 
         return preg_replace($patterns, $replacements, $text);
     }
 
     protected function preprocessPost($item)
     {
-        $item->text = $this->convertLinks($item->text);
+        $item->text = trim($this->convertLinks($item->text));
         $item->author = $this->userGet($item->from_id);
         $item->title = substr($item->text, 0, strpos($item->text, "<br>"));
+        $item->title = strip_tags($item->title);
         if (strlen($item->title) > 75) {
             $item->title = substr($item->title, 0, strpos($item->title, "."));
+            $item->title = substr($item->title, 0, strpos($item->title, "!"));
         }
 
         if (property_exists($item,'attachments'))
