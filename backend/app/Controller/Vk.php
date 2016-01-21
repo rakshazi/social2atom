@@ -24,6 +24,10 @@ Class Vk extends \Nius\Core\Controller
             }
         }
 
+        usort($data['items'], function($a, $b) {
+          return ($a->date > $b->date) ? -1 : 1;
+        });
+
         $atom->setRaw($data)->get();
     }
 }

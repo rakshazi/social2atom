@@ -7,6 +7,7 @@ class Post extends \App\Converter\General\Preprocessor
     {
         $this->ready = $this->raw;
         $this->setLinks();
+        $this->setDate();
         $this->setAuthor();
         $this->setTitle();
         $this->setAttachments();
@@ -30,6 +31,11 @@ class Post extends \App\Converter\General\Preprocessor
         );
 
         $this->ready->text = preg_replace($patterns, $replacements, $this->ready->text);
+    }
+
+    protected function setDate()
+    {
+        $this->ready->date = date("Y-m-d\TH:i:sP",$this->raw->date);
     }
 
     protected function setAuthor()

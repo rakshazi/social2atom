@@ -5,13 +5,13 @@
     <id><?php echo $feed['self_url']; ?></id>
     <link rel="alternate" type="text/html" hreflang="en" href="<?php echo $feed['origin_url']; ?>"/>
     <link rel="self" type="application/atom+xml" href="<?php echo $feed['self_url']; ?>"/>
-    <updated><?php $item=end($items); echo date("Y-m-d\TH:i:sP",$item->date);?></updated>
+    <updated><?php $item=array_values($items)[0]; echo $item->date;?></updated>
     <generator uri="<?php echo $feed['app_url']; ?>" version="1.0">social2atom</generator>
     <?php foreach($items as $item): ?>
     <entry>
         <id><?php echo $feed['origin_url'].'?w=wall'.$item->from_id.'_'.$item->id; ?></id>
         <title type="html"><![CDATA[<?php echo ($item->title) ? $item->title : 'No title available'; ?>]]></title>
-        <updated><?php echo date("Y-m-d\TH:i:sP",$item->date); ?></updated>
+        <updated><?php echo $item->date; ?></updated>
         <link rel="alternate" type="text/html" href="<?php echo $feed['origin_url'].'?w=wall'.$item->from_id.'_'.$item->id; ?>"/>
         <author>
             <name><![CDATA[<?php echo $item->author; ?>]]></name>
