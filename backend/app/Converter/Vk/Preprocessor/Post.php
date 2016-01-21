@@ -15,11 +15,10 @@ class Post extends \App\Converter\General\Preprocessor
     protected function setLinks()
     {
         $patterns = array(
-            '/(https:\/\/[^ <">\)]+)/u',
+            '/((www|http:\/\/|https:\/\/)[^ <">\)]+)/u',
             '/\[(club[0-9]+)\|(.+)\]/u',
             '/\[(id[0-9]+)\|(.+)\]/u',
             '/#([A-Za-zА-Яа-яЁ-ё0-9_]+)/u',
-            '/((www|http:\/\/)[^ <">\)]+)/u',
             '/\[(id[0-9]+)\|(.+)[^,\.]/u',
         );
         $replacements = array(
@@ -27,7 +26,6 @@ class Post extends \App\Converter\General\Preprocessor
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
             '<a href="https://vk.com/feed?q=#\1&section=search" target="_blank">#\1</a>',
-            '<a href="\1" target="_blank">\1</a>',
             '<a href="https://vk.com/\1" target="_blank">\2</a>',
         );
 
