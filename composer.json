@@ -4,6 +4,7 @@
   },
   "require": {
     "nius/core": "^1.0.0",
+    "nius/cache": "dev-master",
     "php-curl-class/php-curl-class": "^4.8"
   },
   "config": {

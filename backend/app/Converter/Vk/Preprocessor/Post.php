@@ -35,7 +35,7 @@ class Post extends \App\Converter\General\Preprocessor
 
     protected function setDate()
     {
-        $this->ready->date = date("Y-m-d\TH:i:sP",$this->raw->date);
+        $this->ready->date = date("Y-m-d\TH:i:sP", $this->raw->date);
     }
 
     protected function setAuthor()
@@ -43,9 +43,9 @@ class Post extends \App\Converter\General\Preprocessor
         $this->ready->author = null;
 
         if ($this->ready->from_id > 0) {
-            $api = new \App\Converter\Vk\API($this->app);
+            $api = $this->app->load("vk\API");
             $user = $api->usersGet($this->ready->from_id);
-            $this->ready->author = $user->response[0]->first_name.' '.$user->response[0]->last_name;
+            $this->ready->author = $user->response[0]->first_name . ' ' . $user->response[0]->last_name;
         }
     }
 
@@ -63,15 +63,13 @@ class Post extends \App\Converter\General\Preprocessor
 
     protected function setAttachments()
     {
-        if (property_exists($this->raw,'attachments')) {
-            foreach($this->raw->attachments as $attachment)
-            {
-                $preprocessor = "\\App\\Converter\\Vk\\Preprocessor\\".ucfirst($attachment->type);
+        if (property_exists($this->raw, 'attachments')) {
+            foreach ($this->raw->attachments as $attachment) {
+                $preprocessor = $this->app->load('vk\Preprocessor\\' . ucfirst($attachment->type));
 
-                if (class_exists($preprocessor)) {
-                    $preprocessor = new $preprocessor($this->app);
-                    $this->ready->text.= "<br><br>";
-                    $this->ready->text.= $preprocessor->setRaw($attachment)->get();
+                if ($preprocessor) {
+                    $this->ready->text .= "<br><br>";
+                    $this->ready->text .= $preprocessor->setRaw($attachment)->get();
                 }
             }
         }

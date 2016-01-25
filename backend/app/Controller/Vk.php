@@ -1,18 +1,18 @@
 <?php
 namespace App\Controller;
 
-Class Vk extends \Nius\Core\Controller
+class Vk extends \Nius\Core\Controller
 {
     public function index()
     {
-        echo "<h2>Use it as ".$this->app->config('app.url').'/vk/[groupname]</h2>';
+        echo "<h2>Use it as " . $this->app->config('app.url') . '/vk/[groupname]</h2>';
     }
 
     public function get($domain)
     {
-        $api = new \App\Converter\Vk\API($this->app);
-        $post = new \App\Converter\Vk\Preprocessor\Post($this->app);
-        $atom = new \App\Converter\Vk\Preprocessor\Atom($this->app);
+        $api = $this->app->load('vk\API');
+        $post = $this->app->load('vk\Preprocessor\Post');
+        $atom = $this->app->load('vk\Preprocessor\Atom');
         $data = array();
 
         $rawItems = $api->wallGet($domain);
@@ -24,8 +24,8 @@ Class Vk extends \Nius\Core\Controller
             }
         }
 
-        usort($data['items'], function($a, $b) {
-          return ($a->date > $b->date) ? -1 : 1;
+        usort($data['items'], function ($a, $b) {
+            return ($a->date > $b->date) ? -1 : 1;
         });
 
         $atom->setRaw($data)->get();

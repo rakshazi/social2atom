@@ -1,3 +1,6 @@
 backend/vendor
 composer.lock
+composer.phar
+/config.php
+cache
 log

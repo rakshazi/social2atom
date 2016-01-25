@@ -3,37 +3,47 @@ namespace App\Converter\Vk;
 
 class API extends \App\Converter\General
 {
-    /**
-     * @var \Curl\Curl
-     */
-    protected $curl;
     protected $url = 'https://api.vk.com/method/';
 
     public function __construct($app)
     {
         parent::__construct($app);
-        $this->curl = new \Curl\Curl();
     }
 
     protected function call($method, $params = array())
     {
-         $url = $this->url.$method.'?'.http_build_query($params);
+        $url = $this->url . $method . '?' . http_build_query($params);
+        $this->app->loadVendor('\Curl\Curl')->get($url);
+        if (
+            $this->app->loadVendor('\Curl\Curl')->error ||
+            property_exists($this->app->loadVendor('\Curl\Curl')->response, "error")
+        ) {
+            sleep(1);
+            return $this->call($method, $params);
+        }
 
-         $this->curl->get($url);
-         if ($this->curl->error) {
-             return $this->call($method, $params);
-         }
-
-         return $this->curl->response;
+        return $this->app->loadVendor('\Curl\Curl')->response;
     }
 
     public function wallGet($domain)
     {
+        $count = ($this->app->config('vk.count')) ? $this->app->config('vk.count') : 100;
         return $this->call(
             'wall.get',
             array(
                 'domain' => $domain,
-                'count' => $this->app->config('vk.count')
+                'count' => $count,
+            )
+        );
+    }
+
+    public function videoGet($owner_id, $video_id)
+    {
+        return $this->call(
+            'video.get',
+            array(
+                'videos' => $owner_id . '_' . $video_id,
+                'access_token' => $this->app->config('vk.token'),
             )
         );
     }
@@ -43,7 +53,7 @@ class API extends \App\Converter\General
         return $this->call(
             'users.get',
             array(
-                'user_ids' => $id
+                'user_ids' => $id,
             )
         );
     }
@@ -54,7 +64,7 @@ class API extends \App\Converter\General
             'groups.getById',
             array(
                 'group_id' => $domain,
-                'fields' => 'description'
+                'fields' => 'description',
             )
         );
     }
