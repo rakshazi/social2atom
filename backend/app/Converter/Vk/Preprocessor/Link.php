@@ -7,7 +7,7 @@ class Link extends \App\Converter\General\Preprocessor
     {
         $this->ready = '';
         $this->ready .= '<a href="' . $this->raw->link->url . '">';
-        $this->ready .= $this->raw->link->title;
+        $this->ready .= mb_convert_encoding($this->raw->link->title, "UTF-8");
         $this->ready .= '</a> ';
     }
 }

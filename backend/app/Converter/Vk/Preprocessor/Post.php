@@ -6,11 +6,17 @@ class Post extends \App\Converter\General\Preprocessor
     protected function process()
     {
         $this->ready = $this->raw;
+        $this->convertEncoding();
         $this->setLinks();
         $this->setDate();
         $this->setAuthor();
         $this->setTitle();
         $this->setAttachments();
+    }
+
+    protected function convertEncoding()
+    {
+        $this->ready->text = mb_convert_encoding($this->ready->text, "UTF-8");
     }
 
     protected function setLinks()

@@ -10,6 +10,7 @@ class Vk extends \Nius\Core\Controller
 
     public function get($domain)
     {
+        $this->app->response->headers['Content-Type'] = 'application/atom+xml';
         $api = $this->app->load('vk\API');
         $post = $this->app->load('vk\Preprocessor\Post');
         $atom = $this->app->load('vk\Preprocessor\Atom');
