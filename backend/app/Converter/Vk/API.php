@@ -12,6 +12,7 @@ class API extends \App\Converter\General
 
     protected function call($method, $params = array())
     {
+        $params['https'] = 1;
         $url = $this->url . $method . '?' . http_build_query($params);
         $this->app->loadVendor('\Curl\Curl')->get($url);
         if (
