@@ -1,39 +1,33 @@
 <?php
-namespace App\Converter\Vk;
+namespace Rakshazi\Social2Atom\Converter\Vk;
 
-class API extends \App\Converter\General
+class API extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
 {
     protected $url = 'https://api.vk.com/method/';
 
-    public function __construct($app)
-    {
-        parent::__construct($app);
-    }
-
-    protected function call($method, $params = array())
+    protected function call($method, $params = array(), $tries = 0)
     {
         $params['https'] = 1;
         $url = $this->url . $method . '?' . http_build_query($params);
-        $this->app->loadVendor('\Curl\Curl')->get($url);
-        if (
-            $this->app->loadVendor('\Curl\Curl')->error ||
-            property_exists($this->app->loadVendor('\Curl\Curl')->response, "error")
-        ) {
+        $this->di->get('\Curl\Curl')->get($url);
+        $curlError = $this->di->get('\Curl\Curl')->error;
+        $apiError = property_exists($this->di->get('\Curl\Curl')->response, "error");
+        if (($curlError || $apiError) && $tries < 10) {
             sleep(1);
-            return $this->call($method, $params);
+            $tries++;
+            return $this->call($method, $params, $tries);
         }
 
-        return $this->app->loadVendor('\Curl\Curl')->response;
+        return $this->di->get('\Curl\Curl')->response;
     }
 
-    public function wallGet($domain)
+    public function wallGet($id)
     {
-        $count = ($this->app->config('vk.count')) ? $this->app->config('vk.count') : 100;
         return $this->call(
             'wall.get',
             array(
-                'domain' => $domain,
-                'count' => $count,
+                'owner_id' => $id,
+                'count' => $this->di->config('vk.count'),
             )
         );
     }
@@ -44,7 +38,7 @@ class API extends \App\Converter\General
             'video.get',
             array(
                 'videos' => $owner_id . '_' . $video_id,
-                'access_token' => $this->app->config('vk.token'),
+                'access_token' => $this->di->config('vk.token'),
             )
         );
     }

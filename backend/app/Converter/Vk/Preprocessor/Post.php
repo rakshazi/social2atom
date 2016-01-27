@@ -57,14 +57,9 @@ class Post extends \App\Converter\General\Preprocessor
 
     protected function setTitle()
     {
-        $title = substr($this->ready->text, 0, strpos($this->ready->text, "<br>"));
-        $title = strip_tags($title);
-        if (strlen($title) == 0) {
-            $title = strip_tags($this->ready->text);
-            $title = substr($title, 0, strpos($title, "."));
-        }
-
-        $this->ready->title = $title;
+        $text = strip_tags($this->ready->text);
+        $size = 200; //symbols for title
+        $this->ready->title = mb_substr($text,0,mb_strrpos(mb_substr($text,0,$size,'utf-8'),' ','utf-8'),'utf-8');
     }
 
     protected function setAttachments()

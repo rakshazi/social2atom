@@ -16,8 +16,8 @@ class Vk extends \Nius\Core\Controller
         $atom = $this->app->load('vk\Preprocessor\Atom');
         $data = array();
 
-        $rawItems = $api->wallGet($domain);
         $data['group'] = $api->groupsGetById($domain);
+        $rawItems = $api->wallGet($data['group']->response[0]->gid);
 
         foreach ($rawItems->response as $item) {
             if (is_object($item)) {

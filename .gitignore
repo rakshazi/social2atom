@@ -4,3 +4,4 @@ composer.phar
 /config.php
 cache
 log
+new
