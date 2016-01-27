@@ -1,8 +1,23 @@
 {
-  "autoload": {
-    "psr-4": {"Rakshazi\\": ["src"]}
-  },
-  "require": {
-    "php-curl-class/php-curl-class": "^4.8"
-  }
+    "name": "rakshazi/social2atom",
+    "description": "Convert social networks to atom feed",
+    "homepage": "https://github.com/rakshazi/social2atom",
+    "type": "library",
+    "license": "BSD-4",
+    "authors": [
+        {
+            "name": "Nikita Chernyi"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/rakshazi/social2atom/issues",
+        "source": "https://github.com/rakshazi/social2atom"
+    },
+    "autoload": {
+        "psr-4": {"Rakshazi\\": ["src"]}
+    },
+    "require": {
+        "ext-curl": "*",
+        "php-curl-class/php-curl-class": "^4.8"
+    }
 }
