@@ -1,33 +1,39 @@
 <?php
-namespace Rakshazi\Social2Atom\Converter\Vk;
+namespace App\Converter\Vk;
 
-class API extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
+class API extends \App\Converter\General
 {
     protected $url = 'https://api.vk.com/method/';
+
+    public function __construct($app)
+    {
+        parent::__construct($app);
+    }
 
     protected function call($method, $params = array(), $tries = 0)
     {
         $params['https'] = 1;
         $url = $this->url . $method . '?' . http_build_query($params);
-        $this->di->get('\Curl\Curl')->get($url);
-        $curlError = $this->di->get('\Curl\Curl')->error;
-        $apiError = property_exists($this->di->get('\Curl\Curl')->response, "error");
+        $this->app->loadVendor('\Curl\Curl')->get($url);
+        $curlError = $this->app->loadVendor('\Curl\Curl')->error;
+        $apiError = property_exists($this->app->loadVendor('\Curl\Curl')->response, "error");
         if (($curlError || $apiError) && $tries < 10) {
             sleep(1);
             $tries++;
             return $this->call($method, $params, $tries);
         }
 
-        return $this->di->get('\Curl\Curl')->response;
+        return $this->app->loadVendor('\Curl\Curl')->response;
     }
 
     public function wallGet($id)
     {
+        $count = ($this->app->config('vk.count')) ? $this->app->config('vk.count') : 100;
         return $this->call(
             'wall.get',
             array(
                 'owner_id' => $id,
-                'count' => $this->di->config('vk.count'),
+                'count' => $count,
             )
         );
     }
@@ -38,7 +44,7 @@ class API extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
             'video.get',
             array(
                 'videos' => $owner_id . '_' . $video_id,
-                'access_token' => $this->di->config('vk.token'),
+                'access_token' => $this->app->config('vk.token'),
             )
         );
     }
