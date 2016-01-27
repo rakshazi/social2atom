@@ -1,7 +1,7 @@
 <?php
-namespace App\Converter\Vk\Preprocessor;
+namespace Rakshazi\Social2Atom\Converter\Vk;
 
-class Link extends \App\Converter\General\Preprocessor
+class Link extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
 {
     protected function process()
     {

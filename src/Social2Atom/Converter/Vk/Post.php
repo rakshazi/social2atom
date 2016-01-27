@@ -1,7 +1,7 @@
 <?php
-namespace App\Converter\Vk\Preprocessor;
+namespace Rakshazi\Social2Atom\Converter\Vk;
 
-class Post extends \App\Converter\General\Preprocessor
+class Post extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
 {
     protected function process()
     {
@@ -49,8 +49,7 @@ class Post extends \App\Converter\General\Preprocessor
         $this->ready->author = null;
 
         if ($this->ready->from_id > 0) {
-            $api = $this->app->load("vk\API");
-            $user = $api->usersGet($this->ready->from_id);
+            $user = $this->di->get("vk\API")->usersGet($this->ready->from_id);
             $this->ready->author = $user->response[0]->first_name . ' ' . $user->response[0]->last_name;
         }
     }
@@ -66,7 +65,7 @@ class Post extends \App\Converter\General\Preprocessor
     {
         if (property_exists($this->raw, 'attachments')) {
             foreach ($this->raw->attachments as $attachment) {
-                $preprocessor = $this->app->load('vk\Preprocessor\\' . ucfirst($attachment->type));
+                $preprocessor = $this->di->get('vk\\' . ucfirst($attachment->type));
 
                 if ($preprocessor) {
                     $this->ready->text .= "<br><br>";

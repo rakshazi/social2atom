@@ -1,12 +1,12 @@
 <?php
-namespace App\Converter\General;
+namespace Rakshazi\Social2Atom\Converter\General;
 
 class Preprocessor
 {
     /**
-     * @var \App\App
+     * @var \Rakshazi\Social2Atom
      */
-    protected $app;
+    protected $di;
 
     /**
      * Raw data
@@ -20,11 +20,18 @@ class Preprocessor
      */
     protected $ready;
 
-    public function __construct($app)
+    public function __construct($di)
     {
-        $this->app = $app;
+        $this->di = $di;
     }
 
+    /**
+     * Set raw data for preprocessor
+     *
+     * @param mixed $raw
+     *
+     * @return $this
+     */
     public function setRaw($raw)
     {
         $this->raw = $raw;
@@ -32,11 +39,19 @@ class Preprocessor
         return $this;
     }
 
+    /**
+     * Processing raw data
+     *
+     * @return bool
+     */
     protected function process()
-    {
-        return true;
-    }
+    {}
 
+    /**
+     * Return ready data
+     *
+     * @return mixed
+     */
     public function get()
     {
         $this->process();
