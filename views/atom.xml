@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title type="text"><?php echo $info->title; ?></title>
-    <subtitle type="html"><?php echo $info->description; ?></subtitle>
+    <subtitle type="html"><?php echo ($info->description) ? $info->description : $info->title; ?></subtitle>
     <id><?php echo $info->self_url; ?></id>
     <link rel="alternate" type="text/html" hreflang="en" href="<?php echo $info->origin_url; ?>"/>
     <link rel="self" type="application/atom+xml" href="<?php echo $info->self_url; ?>"/>
@@ -15,11 +15,18 @@
         <title type="html"><![CDATA[<?php echo ($item->title) ? $item->title : $info->title . ' #' . $item->id; ?>]]></title>
         <updated><?php echo $item->date; ?></updated>
         <link rel="alternate" type="text/html" href="<?php echo $item->url; ?>"/>
-        <?php if(property_exists($item,'audios')) : foreach($item->audios as $audio): ?>
+        <?php
+        if(property_exists($item,'audios')) :
+        foreach($item->audios as $audio):
+        if(property_exists($audio,'duration') && property_exists($audio,'url')):
+        ?>
             <link rel="enclosure" type="audio/mpeg" length="<?php echo $audio->duration; ?>" href="<?php echo $audio->url; ?>"/>
-        <?php endforeach; endif; ?>
+        <?php
+        endif;
+        endforeach;
+        endif; ?>
         <author>
-            <name><![CDATA[<?php echo $item->author; ?>]]></name>
+            <name><![CDATA[<?php echo ($item->author) ? $item->author : $info->title; ?>]]></name>
         </author>
         <content type="html"><![CDATA[<?php echo $item->text; ?>]]></content>
     </entry>

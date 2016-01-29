@@ -36,11 +36,12 @@ class Feed extends \Rakshazi\Social2Atom\Converter\General\Feed
     protected function setItems()
     {
         $items = array();
-        foreach($this->raw['items'] as $data) {
-            $url = $this->setInfo()->origin_url.'?w=wall'.$data->from_id.'_'.$data->id;
+        foreach ($this->raw['items'] as $data) {
+            $url = $this->setInfo()->origin_url . '?w=wall' . $data->from_id . '_' . $data->id;
             $item = new \stdClass();
             $item->id = $url;
             $item->url = $url;
+            $item->audios = array();
             $item->date = date("Y-m-d\TH:i:sP", $data->date);
             $item->author = $this->getAuthor($data);
             $item->title = $this->getTitle($data->text);
@@ -65,7 +66,7 @@ class Feed extends \Rakshazi\Social2Atom\Converter\General\Feed
     {
         $author = null;
 
-        if (property_exists($item,'signer_id')) {
+        if (property_exists($item, 'signer_id')) {
             $user = $this->di->get("vk\API")->usersGet($item->signer_id);
             $author = $user->response[0]->first_name . ' ' . $user->response[0]->last_name;
         }
