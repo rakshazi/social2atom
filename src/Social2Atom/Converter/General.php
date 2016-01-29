@@ -32,6 +32,23 @@ class General
     {}
 
     /**
+     * Return atom feed XML from prepared data
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    protected function getAtom($data)
+    {
+        ob_start();
+        extract($data);
+        include $this->di->config('app.views').'atom.xml';
+        $content = ob_get_clean();
+
+        return $content;
+    }
+
+    /**
      * Run convertation process and return result
      *
      * @return mixed

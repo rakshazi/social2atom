@@ -12,6 +12,7 @@ class Social2Atom
     protected $instances = array();
     protected $converters = array(
         'vk.com' => 'Vk',
+        'facebook.com' => 'Facebook',
     );
     protected $config = array();
 
@@ -19,7 +20,7 @@ class Social2Atom
     {
         $url = 'http://example.com/';
         if(isset($_SERVER['HTTP_HOST'])) {
-            $url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].'/';
+            $url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'];
         }
         $this->config = array(
             'app.views' => dirname(dirname(__FILE__)).'/views/',

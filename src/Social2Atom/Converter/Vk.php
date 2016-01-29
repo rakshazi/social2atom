@@ -6,22 +6,16 @@ class Vk extends General
     public function process()
     {
         $api = $this->di->get('vk\API');
-        $post = $this->di->get('vk\Post');
-        $atom = $this->di->get('vk\Atom');
-        $data = array();
-
-        $data['group'] = $api->groupsGetById($this->source);
-        $rawItems = $api->wallGet($data['group']->response[0]->gid);
-
+        $feed = $this->di->get('vk\Feed');
+        $raw = array();
+        $raw['info'] = $api->groupsGetById($this->source);
+        $rawItems = $api->wallGet($raw['info']->response[0]->gid);
         foreach ($rawItems->response as $item) {
             if (is_object($item)) {
-                $data['items'][] = $post->setRaw($item)->get();
+                $raw['items'][] = $item;
             }
         }
-
-        usort($data['items'], function ($a, $b) {
-            return ($a->date > $b->date) ? -1 : 1;
-        });
-        $this->ready = $atom->setRaw($data)->get();
+        $data = $feed->setRaw($raw)->get();
+        $this->ready = $this->getAtom($data);
     }
 }

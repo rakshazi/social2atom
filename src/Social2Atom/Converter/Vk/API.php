@@ -1,24 +1,12 @@
 <?php
 namespace Rakshazi\Social2Atom\Converter\Vk;
 
-class API extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
+class API extends \Rakshazi\Social2Atom\Converter\General\API
 {
-    protected $url = 'https://api.vk.com/method/';
-
-    protected function call($method, $params = array(), $tries = 0)
+    protected function init()
     {
-        $params['https'] = 1;
-        $url = $this->url . $method . '?' . http_build_query($params);
-        $this->di->get('\Curl\Curl', false)->get($url);
-        $curlError = $this->di->get('\Curl\Curl', false)->error;
-        $apiError = property_exists($this->di->get('\Curl\Curl', false)->response, "error");
-        if (($curlError || $apiError) && $tries < 10) {
-            sleep(1);
-            $tries++;
-            return $this->call($method, $params, $tries);
-        }
-
-        return $this->di->get('\Curl\Curl', false)->response;
+        $this->setUrl('https://api.vk.com/method/');
+        $this->setDefaultParams(array('https' => 1));
     }
 
     public function wallGet($id)
