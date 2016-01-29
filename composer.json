@@ -3,7 +3,7 @@
     "description": "Convert social networks to atom feed",
     "homepage": "https://github.com/rakshazi/social2atom",
     "type": "library",
-    "license": "BSD-4",
+    "license": "MIT",
     "authors": [
         {
             "name": "Nikita Chernyi"

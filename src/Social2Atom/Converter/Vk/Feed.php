@@ -49,7 +49,7 @@ class Feed extends \Rakshazi\Social2Atom\Converter\General\Feed
             $items[] = $this->setAttachments($data, $item);
         }
 
-        usort($items, function ($a, $b) {
+        usort($items, function (\stdClass $a, \stdClass $b) {
             return ($a->date > $b->date) ? -1 : 1;
         });
 

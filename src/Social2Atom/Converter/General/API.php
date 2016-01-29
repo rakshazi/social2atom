@@ -35,7 +35,6 @@ class API extends Preprocessor
         $curlError = $this->di->get('\Curl\Curl', false)->error;
         $apiError = property_exists($this->di->get('\Curl\Curl', false)->response, "error");
         if (($curlError || $apiError) && $tries < 10) {
-            sleep(1);
             $tries++;
             return $this->call($method, $params, $httpMethod, $tries);
         }
