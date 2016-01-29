@@ -1,5 +1,7 @@
 # Social networks 2 Atom feed converter
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/12dbb7ee-77e8-4f55-8a71-8a9da4c0c576/big.png)](https://insight.sensiolabs.com/projects/12dbb7ee-77e8-4f55-8a71-8a9da4c0c576)
+
 Convert social network feeds to atom feed.
 
 **Status list**:
@@ -39,7 +41,7 @@ echo $atomFeedXML;
 
 > Q: How to get facebook.com token?
 >
-> A: Create app (for websites) and get it token (App token) here: https://developers.facebook.com
+> A: Create app (for websites) and get it token (App token) here: https://developers.facebook.com/tools/accesstoken/
 
 > Q: Why no API libraries were used?
 >
