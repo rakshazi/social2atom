@@ -44,8 +44,8 @@ class Feed extends \Rakshazi\Social2Atom\Converter\General\Feed
             $item->audios = array();
             $item->date = date("Y-m-d\TH:i:sP", $data->date);
             $item->author = $this->getAuthor($data);
-            $item->title = $this->getTitle($data->text);
             $item->text = $this->replaceLinks($data->text);
+            $item->title = $this->getTitle($item->text); //Because title can be [club123|Title]
 
             $items[] = $this->setAttachments($data, $item);
         }
