@@ -79,8 +79,8 @@ class Feed extends \Rakshazi\Social2Atom\Converter\General\Feed
         if (property_exists($data, 'attachments')) {
             foreach ($data->attachments as $attachment) {
                 //This construction needed because audio files must be not in atom <content> tag,
-                //but in separate <link> tag for each file
-                if ($attachment->type == 'audio') {
+                //but in separate <link> tag for each file.
+                if ($attachment->type == 'audio' && $this->di->config('general.audio.enclosure')) {
                     $item->audios[] = $this->di->get('vk\\Audio')->setRaw($attachment)->get();
                     continue;
                 }

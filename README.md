@@ -15,12 +15,15 @@ Convert social network feeds to atom feed.
 
 ### Usage
 
+> `$s2a->setConfig()` is optional for vk, but if you want see video and audio - it's required.
+
 ```php
 <?php
 require 'vendor/autoload.php';
 $url = "https://vk.com/apiclub"; //VK group url
 $s2a = new \Rakshazi\Social2Atom;
 $s2a->setConfig(array(
+    'general.audio.enclosure' => false, //Add audio files as post content, not as atom entry element (recommended)
     //For VK.com (Only if you really need it)
     'vk.count' => 100, //Maximum count of posts per feed
     'vk.token' => 'YOUR TOKEN', //Needed only for video and audio

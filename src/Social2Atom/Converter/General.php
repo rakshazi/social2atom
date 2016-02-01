@@ -40,6 +40,7 @@ class General
      */
     protected function getAtom($data)
     {
+        $data['generalAudioEnclosure'] = (bool)$this->di->config('general.audio.enclosure');
         ob_start();
         extract($data);
         include $this->di->config('app.views').'atom.xml';

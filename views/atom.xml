@@ -16,7 +16,7 @@
         <updated><?php echo $item->date; ?></updated>
         <link rel="alternate" type="text/html" href="<?php echo $item->url; ?>"/>
         <?php
-        if(property_exists($item,'audios') && count($item->audios > 0)) :
+        if(property_exists($item,'audios') && count($item->audios > 0) && $generalAudioEnclosure) :
         foreach($item->audios as $audio):
         ?>
             <link rel="enclosure" type="audio/mpeg" length="<?php echo $audio->duration; ?>" href="<?php echo $audio->url; ?>"/>
