@@ -16,13 +16,11 @@
         <updated><?php echo $item->date; ?></updated>
         <link rel="alternate" type="text/html" href="<?php echo $item->url; ?>"/>
         <?php
-        if(property_exists($item,'audios')) :
+        if(property_exists($item,'audios') && count($item->audios > 0)) :
         foreach($item->audios as $audio):
-        if(property_exists($audio,'duration') && property_exists($audio,'url')):
         ?>
             <link rel="enclosure" type="audio/mpeg" length="<?php echo $audio->duration; ?>" href="<?php echo $audio->url; ?>"/>
         <?php
-        endif;
         endforeach;
         endif; ?>
         <author>

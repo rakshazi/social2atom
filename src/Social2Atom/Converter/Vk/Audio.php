@@ -7,10 +7,9 @@ class Audio extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
     {
         $this->ready = array();
         if ($this->di->config('vk.token')) {
-            $this->ready = array(
-                'url' => $this->raw->audio->url,
-                'duration' => $this->raw->audio->duration
-            );
+            $this->ready = new \stdClass();
+            $this->ready->url = $this->raw->audio->url;
+            $this->ready->duration = $this->raw->audio->duration;
         }
     }
 }
