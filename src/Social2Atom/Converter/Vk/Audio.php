@@ -15,8 +15,7 @@ class Audio extends \Rakshazi\Social2Atom\Converter\General\Preprocessor
                 return true;
             }
 
-            $this->ready = "<audio controls><source ";
-            $this->ready .= "src='".$this->raw->audio->url."' type='audio/mpeg'>";
+            $this->ready = "<audio src='".$this->raw->audio->url."' controls>";
             $this->ready .= "Your browser does not support the audio element.";
             $this->ready .= "</audio>";
             $this->ready .= $this->raw->audio->artist." - ".$this->raw->audio->title." ";
